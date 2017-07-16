@@ -12,13 +12,14 @@ echo All files here
 echo $Allfiles
 
 
+
 for file in $Allfiles
 do
 	if [[ $file == *.pdf ]]
 	then
 		echo $file
 		filename=$( basename -s .pdf $file )
-		#hmm, skal fkatisk måske have basename eller noget...
+		#bruger basename -s, -s står for suffix, det fjerner suffix .pdf
 		convert -density 300 $file -quality 90 filename.png
 	fi
 done
