@@ -7,7 +7,7 @@ PORT = 8000
 #web_dir = os.path.join(os.path.dirname(__file__), 'web')
 #os.chdir(web_dir)
 
-os.chdir("C:/Users/Bootleg/Desktop/backup")
+#os.chdir("C:/Users/Bootleg/Desktop/backup")
 
 Handler = http.server.SimpleHTTPRequestHandler
 httpd = socketserver.TCPServer(("", PORT), Handler)
