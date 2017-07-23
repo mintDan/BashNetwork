@@ -20,13 +20,16 @@ IPcut=$( echo $IPoutput | cut -d'(' -f 2 | cut -d')' -f 1 )
 echo $IPcut
 
 #==============================================
-echo Some curl
-curl -I "10.166.6.199:8000"
+#BaseIPpath=$IPcut":8000/"
+#BaseIPpath="10.166.6.199:8000/" #Stationær
+BaseIPpath="10.166.6.198:8000/"	#laptop
+echo cURL base path to HTTP server
+curl -I $BaseIPpath
 #Now we download the files
 echo ---------------------------
 echo Downloading index.html
-BaseIPpath=$IPcut":8000/"
-wget "10.166.6.199:8000"
+
+wget $BaseIPpath
 
 
 
@@ -65,15 +68,20 @@ echo Loop done, saved to variable
 echo ---------------------------
 echo Downloading files from HTTP server
 #BaseIPpath=$IPcut":8000/"
-BaseIPpath="10.166.6.199:8000/"
+#BaseIPpath="10.166.6.199:8000/" #Stationær
+BaseIPpath="10.166.6.198:8000/"	#laptop
+
 for file in $s
 do
 	#gdy dodac string do inny, nie wkladam +.
 	#bezposrednio $string1$string2, a nie $string1+$string2
-	echo curl the files
-	curl -I $BaseIPpath$file
-	echo Download the file
-	wget $BaseIPpath$file
+	#dlatego $BaseIPpath$file
+	echo Size of $file in bytes
+	#-i for case insentitive i grep, -I i curl for header only
+	curl -sI $BaseIPpath$file | grep -i Content-Length | awk '/Content-Length/ {print $2}'
+	echo Download $file
+	#-q for quiet, no output to terminal
+	wget -q $BaseIPpath$file
 done
 
 
