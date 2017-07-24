@@ -1,8 +1,21 @@
 #!/bin/bash
 
-#Lad os lige print all files
+#print all files
 #echo All files
 #ls -lh
+
+function CheckConnection(){
+ping -c4 -q $1
+echo Result
+echo $?
+#hvis result == 0, er der connection, hvis >0, ping failed
+if [ $? == 0 ]
+then
+	echo Connection established to HTTP server
+else
+	echo Couldnt establish connection to HTTP server
+fi 
+}
 
 #================================================
 #Get local ip of http server from my other pc
@@ -20,9 +33,25 @@ IPcut=$( echo $IPoutput | cut -d'(' -f 2 | cut -d')' -f 1 )
 echo $IPcut
 
 #==============================================
+#test connection to server
+#ping -c4 -q $IPcut
+#echo Result
+#echo $?
+#hvis result == 0, er der connection, hvis >0, ping failed
+#if [ $? == 0 ]
+#then
+#	echo Connection established to HTTP server
+#else
+#	echo Couldnt establish connection to HTTP server
+#fi 
+
+CheckConnection $IPcut
+
+#==============================================
 #BaseIPpath=$IPcut":8000/"
 #BaseIPpath="10.166.6.199:8000/" #Stationær
 BaseIPpath="10.166.6.198:8000/"	#laptop
+echo
 echo cURL base path to HTTP server
 curl -I $BaseIPpath
 #Now we download the files
