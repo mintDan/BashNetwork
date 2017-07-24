@@ -100,6 +100,7 @@ echo Downloading files from HTTP server
 #BaseIPpath="10.166.6.199:8000/" #Stationær
 BaseIPpath="10.166.6.198:8000/"	#laptop
 
+Size=0
 for file in $s
 do
 	#gdy dodac string do inny, nie wkladam +.
@@ -107,13 +108,33 @@ do
 	#dlatego $BaseIPpath$file
 	echo Size of $file in bytes
 	#-i for case insentitive i grep, -I i curl for header only
-	curl -sI $BaseIPpath$file | grep -i Content-Length | awk '/Content-Length/ {print $2}'
+	
+	SizeFile=$( curl -sI $BaseIPpath$file | grep -i Content-Length | awk '/Content-Length/ {print $2}' | xargs echo -n )
+	#Size="$((size + SizeFile))"
+	#Size="$Size + $SizeFile"
+	#Size=$(echo "$Size + $SizeFile" | bc)
+	#NewSizeFile=$( echo $SizeFile | xargs echo -n )
+	#echo $NewSizeFile
+	#SizeFileInt="0"	
+	#SizeFileInt=$(($SizeFile+0))
+	#Size=$Size+$SizeFileInt
+	
+	#Size=$(($Size+10)) virker
+	#Size=$(($SizeFile+10)) virker ikke
+	#Så det er SizeFile som fucker up....
+	
+	Size=$(($Size+10))
+	echo $SizeFile
 	echo Download $file
 	#-q for quiet, no output to terminal
 	wget -q $BaseIPpath$file
 done
 
-
+echo Total Size Downloaded
+echo $Size
+echo Available space
+DiskSpace=$( df -h | grep "/dev/sda1" | awk '{print $4}' )
+echo $DiskSpace
 
 #=============================================
 #We must now convert files
