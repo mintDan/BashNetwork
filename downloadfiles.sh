@@ -109,28 +109,21 @@ do
 	echo Size of $file in bytes
 	#-i for case insentitive i grep, -I i curl for header only
 	
-	SizeFile=$( curl -sI $BaseIPpath$file | grep -i Content-Length | awk '/Content-Length/ {print $2}' | xargs echo -n )
-	#Size="$((size + SizeFile))"
-	#Size="$Size + $SizeFile"
-	#Size=$(echo "$Size + $SizeFile" | bc)
-	#NewSizeFile=$( echo $SizeFile | xargs echo -n )
-	#echo $NewSizeFile
-	#SizeFileInt="0"	
-	#SizeFileInt=$(($SizeFile+0))
-	#Size=$Size+$SizeFileInt
+	SizeFile=$( curl -sI $BaseIPpath$file | grep -i Content-Length | awk '/Content-Length/ {print $2}' )
+	#xargs echo -n	
 	
-	#Size=$(($Size+10)) virker
-	#Size=$(($SizeFile+10)) virker ikke
-	#Så det er SizeFile som fucker up....
+	#echo $SizeFile | tr -d '\r'
+	SizeFile=$( echo $SizeFile | tr -d '\r' )
 	
-	Size=$(($Size+10))
+	
+	Size=$(($SizeFile+$Size))
 	echo $SizeFile
 	echo Download $file
 	#-q for quiet, no output to terminal
 	wget -q $BaseIPpath$file
 done
 
-echo Total Size Downloaded
+echo "Total Size of files downloaded in bytes" 
 echo $Size
 echo Available space
 DiskSpace=$( df -h | grep "/dev/sda1" | awk '{print $4}' )
